@@ -87,8 +87,8 @@ void StackCtor (struct Stack * stk)
     stk->Capacity = 1;
     stk->Data = (StackElem_t *) calloc (stk->Capacity + 2, sizeof(StackElem_t));
     *(stk->Data) = CANARY_VALUE;
-    stk->Data += sizeof (StackElem_t);
-    *(stk->Data + stk->Capacity * sizeof (StackElem_t)) = CANARY_VALUE;
+    stk->Data += 1;
+    *(stk->Data + stk->Capacity) = CANARY_VALUE;
 
     stk->LeftCanary = CANARY_VALUE;
     stk->RightCanary = CANARY_VALUE;
@@ -106,19 +106,18 @@ StackElem_t StackPush (struct Stack * stk, StackElem_t unit)
 
     stk->Data[stk->Size] = unit;
     stk->Size++;
-    printf ("%p", stk->Data);
     
-    StackElem_t * temp_data = (StackElem_t *) realloc (stk->Data, 2 * sizeof(StackElem_t) * (stk->Capacity + 1));
+    StackElem_t * temp_data = (StackElem_t *) realloc (stk->Data, 2 * (stk->Capacity + 1));
 
     if (temp_data == NULL) 
         stk->ErrorCode = REALLOC_ERR;
 
     stk->Data = temp_data;
-    stk->Data += sizeof (StackElem_t);
+    stk->Data += 1;
 
-    *((stk->Data + stk->Capacity * sizeof(StackElem_t))) = 0;
+    *(stk->Data + stk->Capacity) = 0;
     stk->Capacity = stk->Size * 2;
-    *(stk->Data + stk->Capacity * sizeof (StackElem_t)) = CANARY_VALUE;
+    *(stk->Data + stk->Capacity) = CANARY_VALUE;
 
     StackCheck (stk);
     return unit;
@@ -133,17 +132,17 @@ StackElem_t StackPop (struct Stack * stk)
     stk->Data[stk->Size] = 0;
     stk->Size--;
 
-    StackElem_t * temp_data = (StackElem_t *) realloc (stk->Data, 2 * sizeof(StackElem_t) * (stk->Capacity + 1));
+    StackElem_t * temp_data = (StackElem_t *) realloc (stk->Data, 2 * (stk->Capacity + 1));
 
     if (temp_data == NULL) 
         stk->ErrorCode = REALLOC_ERR;
 
     stk->Data = temp_data;
-    stk->Data += sizeof (StackElem_t);
+    stk->Data += 1;
 
-    *((stk->Data + stk->Capacity * sizeof(StackElem_t))) = 0;
+    *(stk->Data + stk->Capacity) = 0;
     stk->Capacity = stk->Size / 2;
-    *(stk->Data + stk->Capacity * sizeof (StackElem_t)) = CANARY_VALUE;
+    *(stk->Data + stk->Capacity) = CANARY_VALUE;
 
     StackCheck (stk);
     return stk->Data[stk->Size];
@@ -178,9 +177,9 @@ int StackCheck (struct Stack * stk)
         stk->ErrorCode = STACK_OVERFLOW;
     else if (!CompareTwo(stk->Hash, 4))
         stk->ErrorCode = HASH_ERR;
-    else if (!CompareTwo(*(stk->Data - sizeof (StackElem_t)), CANARY_VALUE))
+    else if (!CompareTwo(*(stk->Data - 1), CANARY_VALUE))
         stk->ErrorCode = LEFT_CANARY_DEATH;
-    else if (!CompareTwo(*(stk->Data + stk->Capacity * sizeof (StackElem_t)), CANARY_VALUE))
+    else if (!CompareTwo(*(stk->Data + stk->Capacity ), CANARY_VALUE))
         stk->ErrorCode = RIGHT_CANARY_DEATH;
     else if (!isfinite(stk->Size))
         stk->ErrorCode = SIZE_ERR;

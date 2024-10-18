@@ -13,13 +13,13 @@
 #include "StackFuncs.h"
 
 typedef double StackElem_t;
-const StackElem_t CanaryValue = 0xC0110CF00;
+const StackElem_t CANARY_VALUE = 0xC0110CF00;
 
 //--------------------------------------------------------//
 
 struct Stack
 {
-    StackElem_t LeftCanary  = CanaryValue;
+    StackElem_t LeftCanary  = CANARY_VALUE;
 
     StackElem_t * Data      = NULL;
     size_t Size             = 0;
@@ -28,7 +28,7 @@ struct Stack
     int ErrorCode           = 0;
     int Hash                = 0;
     
-    StackElem_t RightCanary = CanaryValue;
+    StackElem_t RightCanary = CANARY_VALUE;
 };
 
 #endif

@@ -12,7 +12,6 @@ printf (__VA_ARGS__);\
 printf ("%s", RESET)
 
 
-
 enum ErrorCodes {
     OK                      = 0,
     ERR                     = 1,
@@ -29,6 +28,7 @@ enum ErrorCodes {
 };
 
 typedef double StackElem_t;
+const double EPSILON = pow (10, -6);
 
 //--------------------------------------------------------//
 
@@ -39,8 +39,6 @@ StackElem_t StackAdd    (struct Stack * stk);
 StackElem_t StackSub    (struct Stack * stk);
 StackElem_t StackMul    (struct Stack * stk);
 StackElem_t StackDiv    (struct Stack * stk);
-//StackElem_t StackOut    (struct Stack * stk);
-//StackElem_t StackIn     (struct Stack * stk);
 StackElem_t StackSqrt   (struct Stack * stk);
 StackElem_t StackSin    (struct Stack * stk);
 StackElem_t StackCos    (struct Stack * stk);
@@ -50,8 +48,9 @@ void StackDtor   (struct Stack * stk);
 
 int StackDump   (struct Stack * stk);
 int StackCheck  (struct Stack * stk);
-void StackError (int ErrorCode);
+void StackError (int ErrorCode, Stack * stk);
 
-int AddErrorInfo (int x, struct Stack * stk);
+bool CompareTwo (double k1, double k2);
+static unsigned long DaSickHash(const void* str, size_t size);
 
 #endif

@@ -7,9 +7,9 @@ CFLAGS = -c -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-
 	-Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing   \
 	-Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 
-INCLUDES = headers/stack.h headers/StackFuncs.h
+INCLUDES = stack.h
 
-SOURCES = src/stack.cpp src/StackFuncs.cpp
+SOURCES = main.cpp stack.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 

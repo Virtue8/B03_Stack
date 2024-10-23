@@ -1,6 +1,14 @@
-#ifndef STACKFUNCS_H
-#define STACKFUNCS_H
-#include "stack.h"
+#ifndef STACK_H
+#define STACK_H
+
+//--------------------------------------------------------//
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <assert.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 #define RESET   "\033[0m"
 #define RED     "\033[1;31m"
@@ -11,6 +19,23 @@ printf ("%s", COLOR);\
 printf (__VA_ARGS__);\
 printf ("%s", RESET)
 
+typedef long int StackElem_t;
+const StackElem_t CANARY_VALUE = 0xC0110CF00;
+
+//--------------------------------------------------------//
+
+struct Stack
+{
+    StackElem_t LeftCanary  = CANARY_VALUE;
+
+    StackElem_t * Data      = NULL;
+    size_t Size             = 0;
+    size_t Capacity         = 0;
+
+    int ErrorCode           = 0;
+    
+    StackElem_t RightCanary = CANARY_VALUE;
+};
 
 enum ErrorCodes {
     OK                      = 0,
@@ -18,16 +43,14 @@ enum ErrorCodes {
     NULL_STRUCT_POINTER     = 2,
     NULL_DATA_POINTER       = 3,
     STACK_OVERFLOW          = 4,
-    HASH_ERR                = 5,
-    LEFT_CANARY_DEATH       = 6,
-    RIGHT_CANARY_DEATH      = 7,
-    SIZE_ERR                = 8,
-    CAPACITY_ERR            = 9,
-    FILE_ERR                = 10,
-    REALLOC_ERR             = 11,
+    LEFT_CANARY_DEATH       = 5,
+    RIGHT_CANARY_DEATH      = 6,
+    SIZE_ERR                = 7,
+    CAPACITY_ERR            = 8,
+    FILE_ERR                = 9,
+    REALLOC_ERR             = 10,
 };
 
-typedef double StackElem_t;
 const double EPSILON = pow (10, -6);
 
 //--------------------------------------------------------//
@@ -51,6 +74,6 @@ int StackCheck  (struct Stack * stk);
 void StackError (int ErrorCode, Stack * stk);
 
 bool CompareTwo (double k1, double k2);
-static unsigned long DaSickHash(const void* str, size_t size);
+void MemDump (struct Stack * stk);
 
 #endif

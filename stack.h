@@ -14,10 +14,10 @@
 #define RED     "\033[1;31m"
 #define GREEN   "\033[1;32m"
 
-#define COLORED_LINE(COLOR, ...) \
-printf ("%s", COLOR);\
-printf (__VA_ARGS__);\
-printf ("%s", RESET)
+#define COLORED_LINE(COLOR, ...)    \
+    printf ("%s", COLOR);           \
+    printf (__VA_ARGS__);           \
+    printf ("%s", RESET)
 
 typedef long int StackElem_t;
 const StackElem_t CANARY_VALUE = 0xC0110CF00;
@@ -37,21 +37,38 @@ struct Stack
     StackElem_t RightCanary = CANARY_VALUE;
 };
 
-enum ErrorCodes {
-    OK                      = 0,
-    ERR                     = 1,
-    NULL_STRUCT_POINTER     = 2,
-    NULL_DATA_POINTER       = 3,
-    STACK_OVERFLOW          = 4,
-    LEFT_CANARY_DEATH       = 5,
-    RIGHT_CANARY_DEATH      = 6,
-    SIZE_ERR                = 7,
-    CAPACITY_ERR            = 8,
-    FILE_ERR                = 9,
-    REALLOC_ERR             = 10,
+enum ErrorCodes 
+{
+    ERR                     = 0,
+    STACK_OVERFLOW          = 1,
+    NULL_DATA_POINTER       = 2,
+    NULL_STRUCT_POINTER     = 3,
+    LEFT_CANARY_DEATH       = 4,
+    RIGHT_CANARY_DEATH      = 5,
+    SIZE_ERR                = 6,
+    CAPACITY_ERR            = 7,
+    REALLOC_ERR             = 8,
+    POP_ERR                 = 9,
+};
+
+enum ReallocMode 
+{
+    POP,
+    PUSH
 };
 
 const double EPSILON = pow (10, -6);
+
+const char ErrorMessages[12][50] = {"Construction error\n", 
+                                    "Stack is overflowed\n", 
+                                    "NULL data pointer\n",
+                                    "NULL struct pointer\n",
+                                    "Data destruction from left side\n",
+                                    "Data destruction from right side\n",
+                                    "Size error\n",
+                                    "Capacity error\n",
+                                    "Reallocation error\n",
+                                    "StackPop error: minimum size limit\n"};
 
 //--------------------------------------------------------//
 
@@ -68,6 +85,7 @@ StackElem_t StackCos    (struct Stack * stk);
 
 void StackCtor   (struct Stack * stk);
 void StackDtor   (struct Stack * stk);
+void StackRealloc (struct Stack * stk, int MODE);
 
 int StackDump   (struct Stack * stk);
 int StackCheck  (struct Stack * stk);

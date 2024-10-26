@@ -199,11 +199,7 @@ int StackDump (struct Stack * stk)
     if (stk == 0)
     {
         COLORED_LINE (RED, "Zero Stack Pointer!!!\n");
-    }
-    else if (stk->Data == 0)
-    {
-        COLORED_LINE (RED, "Zero Data Pointer!!!\n");
-    }   
+    } 
     else
     {
         printf ("\n\n");
@@ -216,28 +212,34 @@ int StackDump (struct Stack * stk)
         printf ("| Capacity:     %lu\n", stk->Capacity);
         printf ("----------------------\n\n");
 
-        printf ("%ld current\n%ld required left canary value\n\n", *(stk->Data - 1), CANARY_VALUE);
-        printf ("%ld current\n%ld required right canary value\n\n", *(stk->Data + stk->Capacity), CANARY_VALUE);
-
-        printf ("Data pointer: %p\n", stk->Data);
-
-        if ((stk->Capacity < pow(10, 10)) && (stk->Size < pow (10, 10)))
+        if (stk->Data == 0)
         {
-            printf ("\n------------------");
-            for (size_t i = 0; i != stk->Size; i++)
-                printf ("------");
-            printf ("\n");
+            COLORED_LINE (RED, "Zero Data Pointer!!!\n");
+        }  
+        else
+        {
+            printf ("%ld current\n%ld required left canary value\n\n", *(stk->Data - 1), CANARY_VALUE);
+            printf ("%ld current\n%ld required right canary value\n\n", *(stk->Data + stk->Capacity), CANARY_VALUE);
 
-            printf ("| Stack Data:    ");
-            for (size_t i = 0; i < stk->Size; i++)
-                printf ("%ld    ", stk->Data[i]);
-            printf ("|\n");
+            printf ("Data pointer: %p\n", stk->Data);
 
-            printf ("------------------");
-            for (size_t i = 0; i != stk->Size; i++)
-                printf ("------");
-            printf ("\n\n");
-        }
+            if (stk->ErrorCode != POP_ERR && isfinite(stk->Size) && isfinite(stk->Capacity)) 
+            {
+                printf ("\n------------------");
+                for (size_t i = 0; i != stk->Size; i++)
+                    printf ("------");
+                printf ("\n");
+
+                printf ("| Stack Data:    ");
+                for (size_t i = 0; i < stk->Size; i++)
+                    printf ("%ld    ", stk->Data[i]);
+                printf ("|\n");
+
+                printf ("------------------");
+                for (size_t i = 0; i != stk->Size; i++)
+                    printf ("------");
+                printf ("\n\n");
+            }
 
         MemDump (stk);
 
@@ -247,6 +249,7 @@ int StackDump (struct Stack * stk)
             printf ("%s", ErrorMessages[stk->ErrorCode]);
             exit(1);
         }
+        }
     }
 
     return 0;
@@ -255,7 +258,7 @@ int StackDump (struct Stack * stk)
 void MemDump (struct Stack * stk)
 {
     COLORED_LINE (GREEN, "MEMORY DUMP\n");
-    size_t cell;
+    size_t cell = 0;
     for (size_t i = 0; i != stk->Capacity + 6; i++)
     {
         cell = ((StackElem_t)stk->Data - 1 + i) - ((StackElem_t)stk->Data - 1 + i)/100*100;

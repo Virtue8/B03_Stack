@@ -13,15 +13,15 @@ SOURCES = main.cpp stack.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
-EXECUTABLE = stack
+EXECUTABLE = stack.exe
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@
+	@$(CC) $(OBJECTS) -o $@
 
 .cpp.o: $(INCLUDES)
-	$(CC) $(CFLAGS) $< -o $@
+	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	rm -rf *.o stack

@@ -48,7 +48,7 @@ StackElem_t StackSqrt (struct Stack * stk)
     StackCheck (stk);
 
     StackElem_t a = StackPop (stk);
-    return StackPush (stk, sqrt (a));;
+    return StackPush (stk, (StackElem_t) sqrt (a));;
 }
 
 StackElem_t StackSin (struct Stack * stk)
@@ -56,7 +56,7 @@ StackElem_t StackSin (struct Stack * stk)
     StackCheck (stk);
     
     StackElem_t a = StackPop (stk);
-    return StackPush (stk, sin (a));
+    return StackPush (stk, (StackElem_t) sin (a));
 }
 
 StackElem_t StackCos (struct Stack * stk)
@@ -64,7 +64,7 @@ StackElem_t StackCos (struct Stack * stk)
     StackCheck (stk);
 
     StackElem_t a = StackPop (stk);
-    return StackPush (stk, cos (a));
+    return StackPush (stk, (StackElem_t) cos (a));
 }
 
 //--------------------------------------------------------//
@@ -93,7 +93,7 @@ StackElem_t StackPush (struct Stack * stk, StackElem_t unit)
     StackCheck (stk);
 
     if (stk->Size == stk->Capacity)
-        StackRealloc (stk, PUSH);
+        StackRealloc (stk, RM_PUSH);
 
     stk->Data[stk->Size++] = unit;
     return unit;
@@ -116,7 +116,7 @@ StackElem_t StackPop (struct Stack * stk)
     StackElem_t unit = stk->Data[stk->Size];
 
     if (stk->Capacity > 2 * stk->Size + 1)
-        StackRealloc (stk, PUSH);
+        StackRealloc (stk, RM_POP);
 
     return unit;
 }
@@ -144,11 +144,11 @@ void StackRealloc (struct Stack * stk, int MODE)
     *(stk->Data + stk->Capacity) = 0;
     stk->Data--;
     
-    if (MODE == POP)
+    if (MODE == RM_POP)
         stk->Capacity = stk->Size + 1;
 
-    else if (MODE == PUSH)
-        stk->Capacity = stk->Size * 2;
+    else if (MODE == RM_PUSH)
+        stk->Capacity = stk->Size * 2 + 1;
     
     stk->Data = (StackElem_t *) realloc (stk->Data, sizeof(StackElem_t)*(stk->Capacity + 2));
     if (stk->Data == NULL) 

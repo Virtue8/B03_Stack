@@ -53,8 +53,8 @@ enum ErrorCodes
 
 enum ReallocMode 
 {
-    POP,
-    PUSH
+    RM_POP,
+    RM_PUSH
 };
 
 const double EPSILON = pow (10, -6);
